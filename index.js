@@ -10,23 +10,37 @@ const token = process.env.TELEGRAM_BOT_TOKEN;
 // Create a bot instance
 const bot = new TelegramBot(token);
 
-// Handle incoming messages
-bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-  const text = msg.text;
+// Middleware to parse JSON
+app.use(express.json());
 
-  console.log(`Received message: ${text} from chat ID: ${chatId}`);
+// Webhook endpoint
+app.post('/api', (req, res) => {
+  const { message } = req.body;
 
-  // Echo the message back in the desired format
-  bot.sendMessage(chatId, `You said '${text}'`);
-  
+  bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, 'Bot is working!');
+  });
+
+  if (message) {
+    const chatId = message.chat.id;
+    const text = message.text;
+
+    // Echo the message back
+    bot.sendMessage(chatId, `You said '${text}'`)
+      .then(() => {
+        console.log(`Message sent to chat ID ${chatId}: ${text}`);
+      })
+      .catch((err) => {
+        console.error('Error sending message:', err);
+      });
+  }
+
+  // Respond to Telegram to acknowledge receipt of the message
   res.sendStatus(200);
 });
 
-bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Bot is working!');
-});
+
 // Start the Express server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
