@@ -1,3 +1,5 @@
+import { inject } from "@vercel/analytics/react" // This helps Vercel display analytics for the project but after running ""
+
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 
@@ -22,4 +24,5 @@ bot.on('message', (msg) => {
 // Start the Express server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
+  inject();
 });
