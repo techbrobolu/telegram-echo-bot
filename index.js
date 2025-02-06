@@ -1,6 +1,3 @@
-const { Analytics } = require('@vercel/analytics');
-const analytics = new Analytics(); // This helps Vercel display analytics for the project but after running ""
-
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 
