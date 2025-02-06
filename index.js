@@ -20,12 +20,6 @@ bot.on('message', (msg) => {
   // Echo the message back in the desired format
   bot.sendMessage(chatId, `You said '${text}'`);
   
-
-  // Log the event using Vercel Analytics
-  analytics.track('MessageReceived', {
-    chatId: chatId,
-    message: text,
-  });
   res.sendStatus(200);
 });
 
