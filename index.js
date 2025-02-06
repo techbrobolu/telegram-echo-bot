@@ -1,36 +1,24 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 
+require('dotenv').config();
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Replace with your bot token (set as an environment variable)
-const token = process.env.TELEGRAM_BOT_TOKEN
-const bot = new TelegramBot(token);
+// Replace with your bot token (will be set as an environment variable)
+const token = process.env.TELEGRAM_BOT_TOKEN;
 
-// Middleware to parse JSON
-app.use(express.json());
+// Create a bot instance
+const bot = new TelegramBot(token, { polling: true });
 
-// Webhook endpoint
-app.post('/api', (req, res) => {
-  const { message } = req.body;
+// Handle incoming messages
+bot.on('message', (msg) => {
+  const chatId = msg.chat.id;
+  const text = msg.text;
 
-  if (message) {
-    const chatId = message.chat.id;
-    const text = message.text;
-
-    // Echo the message back
-    bot.sendMessage(chatId, `You said '${text}'`)
-      .then(() => {
-        console.log(`Message sent to chat ID ${chatId}: ${text}`);
-      })
-      .catch((err) => {
-        console.error('Error sending message:', err);
-      });
-  }
-
-  // Respond to Telegram to acknowledge receipt of the message
-  res.sendStatus(200);
+  // Echo the message back in the desired format
+  bot.sendMessage(chatId, `You said '${text}'`);
 });
 
 // Start the Express server
